@@ -45,6 +45,31 @@ namespace MRW {
       }
       memcpy(memory.data() + offsetInBytes, values.data(), size);
    }
+
+   std::array<unsigned char,2> getHex(unsigned char byte) {
+      const unsigned char HexChars[6] = {'A','B','C','D','E','F'};
+      std::array<unsigned char,2> array{};
+      unsigned char bits = byte & 0x0F;
+      for (int i = 0; i < 2; ++i) {
+         if(i == 0) {
+            bits = (byte & 0xF0) >> 4;
+         }
+         if(bits < 10) {
+            array[i] = '0' + bits;
+         } else array[i] = HexChars[bits-10];
+      }
+      return array;
+   }
+
+   std::string getHex(const std::vector<char>& buffer) {
+      std::string hexString(buffer.size()*3-1,' ');
+      for (int i = 0; i < buffer.size(); ++i) {
+         auto hexChars = getHex(buffer[i]);
+         hexString[i*3] = (char)hexChars[0];
+         hexString[i*3+1] = (char)hexChars[1];
+      }
+      return hexString;
+   }
 }
 
 #endif //MEMORY_MEMORY_REAT_WRITE_H
